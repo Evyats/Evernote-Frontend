@@ -14,8 +14,6 @@ function PageButton({ pageName, pagePath }: { pageName: string, pagePath: string
     )
 }
 
-
-
 function HealthButton() {
 
     const [healthData, setHealthData] = useState<{ status: string } | null>(null)
