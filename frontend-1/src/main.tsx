@@ -6,6 +6,7 @@ import Layout from './Layout.tsx';
 import HomePage from './pages/HomePage.tsx';
 import SignInPage from './pages/SignInPage.tsx';
 import SignUpPage from './pages/SignUpPage.tsx';
+import { AuthProvider } from './auth/AuthContext.tsx';
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -30,6 +31,8 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {/* <App /> */}
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 )
