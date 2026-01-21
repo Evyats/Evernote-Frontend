@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { data } from "react-router-dom";
 
-
+const API_BASE_URL = import.meta.env.VITE_API_URL
 
 
 export default function SignUpPage() {
@@ -16,7 +16,7 @@ export default function SignUpPage() {
 
 
   async function fetchSignUp(email: string, password: string) {
-    let backurl: string = "http://localhost:8123/api/users"
+    let backurl: string = `${API_BASE_URL}/api/users`
     const result = await fetch(backurl, {
       method: "POST",
       headers: {

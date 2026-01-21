@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useAuth } from "../auth/AuthContext"
 
+const API_BASE_URL = import.meta.env.VITE_API_URL
 
 export default function SignInPage() {
 
@@ -12,7 +13,7 @@ export default function SignInPage() {
   const { setToken } = useAuth()
 
   async function fetchSignIn(email: string, password: string) {
-    const result = await fetch("http://localhost:8123/auth/login", {
+    const result = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
