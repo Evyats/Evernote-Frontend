@@ -6,6 +6,7 @@ import Layout from './Layout.tsx';
 import HomePage from './pages/HomePage.tsx';
 import SignInPage from './pages/SignInPage.tsx';
 import SignUpPage from './pages/SignUpPage.tsx';
+import NotesPage from './pages/NotesPage.tsx';
 import { AuthProvider, useAuth } from './auth/AuthContext.tsx';
 
 
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
         path: "/notes",
         element: (
           <Protected>
-            <div>You are authenticated!</div>
+            <NotesPage />
           </Protected>
         )
       },
