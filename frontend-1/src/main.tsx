@@ -1,12 +1,21 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '../index.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import Layout from './Layout.tsx';
 import HomePage from './pages/HomePage.tsx';
 import SignInPage from './pages/SignInPage.tsx';
 import SignUpPage from './pages/SignUpPage.tsx';
-import { AuthProvider } from './auth/AuthContext.tsx';
+import { AuthProvider, useAuth } from './auth/AuthContext.tsx';
+
+
+
+function Protected({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth()
+  return isAuthenticated ? children : <Navigate to="/sign-in" replace />;
+}
+
+
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -22,7 +31,15 @@ const router = createBrowserRouter([
       {
         path: "/sign-up",
         element: <SignUpPage />
-      }
+      },
+      {
+        path: "/notes",
+        element: (
+          <Protected>
+            <div>You are authenticated!</div>
+          </Protected>
+        )
+      },
     ]
   }
 ])

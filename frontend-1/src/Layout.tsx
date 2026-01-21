@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from './auth/AuthContext'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL
+const API_BASE_URL = import.meta.env.VITE_API_URL_1
 
 
 
@@ -131,6 +131,7 @@ export default function Layout() {
                 <PageButton pageName="Home" pagePath="/" />
                 <PageButton pageName="Login" pagePath="/sign-in" />
                 <PageButton pageName="Register" pagePath="/sign-up" />
+                <PageButton pageName="Notes" pagePath="/notes" />
                 <div className="m-auto"></div>
                 <UserStatus />
                 <HealthButton />
