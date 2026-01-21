@@ -67,14 +67,22 @@ function HealthButton() {
 function UserStatus() {
 
 
-    const { token, isAuthenticated } = useAuth()
+    const { token, isAuthenticated, clearAuth } = useAuth()
 
-    const [userData, setUserData] = useState<null | { id: string, email: string }>(null)
+    type userData = {
+        id: string
+        email: string
+    }
+
+    const [userData, setUserData] = useState<null | userData>(null)
 
 
     useEffect(() => {
         if (isAuthenticated) {
             fetchUserInfo()
+        }
+        else {
+            clearAuth()
         }
     }, [isAuthenticated])
 
@@ -90,13 +98,20 @@ function UserStatus() {
                     }
                 }
             )
-            let resultJson = await result.json()
+
+
+            if (!result.ok) {
+                throw new Error(`Failed to fetch user info (status ${result.status})`)
+            }
+
+
+            const resultJson = await result.json()
             console.log(resultJson)
-                
+
             setUserData({
-                    id: resultJson['user']['id'],
-                    email: resultJson['user']['email']
-                })
+                id: resultJson.user.id,
+                email: resultJson.user.email
+            })
         }
         catch (error) {
             console.log("something went wrong")
@@ -109,7 +124,7 @@ function UserStatus() {
         <div className="border rounded-full p-2 text-sm text-center whitespace-pre-line">
             {
                 userData ? `Welcome back\n${userData.email} !!!`
-                : "Please\nlogin / register"
+                    : "Please\nlogin / register"
             }
         </div>
     )
