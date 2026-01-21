@@ -65,17 +65,13 @@ function HealthButton() {
 
 
 function UserStatus() {
-
-
     const { token, isAuthenticated, clearAuth } = useAuth()
-
     type userData = {
         id: string
         email: string
     }
-
     const [userData, setUserData] = useState<null | userData>(null)
-
+    const [isChecking, setIsChecking] = useState<boolean>(false)
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -83,31 +79,23 @@ function UserStatus() {
         }
         else {
             clearAuth()
+            setUserData(null)
+            setIsChecking(false)
         }
     }, [isAuthenticated])
 
-
     async function fetchUserInfo() {
         const baseUrl = "http://localhost:8123/auth/me"
+        setIsChecking(true)
         try {
             const result = await fetch(
                 baseUrl,
-                {
-                    headers: {
-                        "authorization": `Bearer ${token}`
-                    }
-                }
+                { headers: { "authorization": `Bearer ${token}` } }
             )
-
-
             if (!result.ok) {
                 throw new Error(`Failed to fetch user info (status ${result.status})`)
             }
-
-
             const resultJson = await result.json()
-            console.log(resultJson)
-
             setUserData({
                 id: resultJson.user.id,
                 email: resultJson.user.email
@@ -116,15 +104,18 @@ function UserStatus() {
         catch (error) {
             console.log("something went wrong")
         }
+        finally {
+            setIsChecking(false)
+        }
         console.log(userData)
     }
-
 
     return (
         <div className="border rounded-full p-2 text-sm text-center whitespace-pre-line">
             {
-                userData ? `Welcome back\n${userData.email} !!!`
-                    : "Please\nlogin / register"
+                isChecking ? "Checking\nauthentication . . ."
+                : userData ? `Welcome back\n${userData.email} !!!`
+                : "Please\nlogin / register"
             }
         </div>
     )
