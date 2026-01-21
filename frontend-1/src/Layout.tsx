@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { data, NavLink, Outlet } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, Outlet } from 'react-router-dom'
+import { useAuth } from './auth/AuthContext'
 
 
 
@@ -52,11 +53,70 @@ function HealthButton() {
             >
                 {
                     isLoading ? "Loading..."
-                    : errorMessage ? errorMessage
-                    : healthData ? `Health: ${healthData.status}`
-                    : "Check Health"
+                        : errorMessage ? errorMessage
+                            : healthData ? `Health: ${healthData.status}`
+                                : "Check Health"
                 }
             </button>
+        </div>
+    )
+}
+
+
+
+function UserStatus() {
+    const { token, isAuthenticated, clearAuth } = useAuth()
+    type userData = {
+        id: string
+        email: string
+    }
+    const [userData, setUserData] = useState<null | userData>(null)
+    const [isChecking, setIsChecking] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchUserInfo()
+        }
+        else {
+            clearAuth()
+            setUserData(null)
+            setIsChecking(false)
+        }
+    }, [isAuthenticated])
+
+    async function fetchUserInfo() {
+        const baseUrl = "http://localhost:8123/auth/me"
+        setIsChecking(true)
+        try {
+            const result = await fetch(
+                baseUrl,
+                { headers: { "authorization": `Bearer ${token}` } }
+            )
+            if (!result.ok) {
+                throw new Error(`Failed to fetch user info (status ${result.status})`)
+            }
+            const resultJson = await result.json()
+            setUserData({
+                id: resultJson.user.id,
+                email: resultJson.user.email
+            })
+        }
+        catch (error) {
+            console.log("something went wrong")
+        }
+        finally {
+            setIsChecking(false)
+        }
+        console.log(userData)
+    }
+
+    return (
+        <div className="border rounded-full p-2 text-sm text-center whitespace-pre-line">
+            {
+                isChecking ? "Checking\nauthentication . . ."
+                : userData ? `Welcome back\n${userData.email} !!!`
+                : "Please\nlogin / register"
+            }
         </div>
     )
 }
@@ -66,21 +126,20 @@ function HealthButton() {
 export default function Layout() {
     return (
         <div className="min-h-screen space-y-5 bg-slate-950 text-slate-50">
-            <div className="max-w-2xl mx-auto bg-slate-800 p-3 flex flex-row gap-3">
+            <div className="max-w-3xl mx-auto bg-slate-800 p-3 flex flex-row gap-3 items-center">
                 <PageButton pageName="Home" pagePath="/" />
                 <PageButton pageName="Login" pagePath="/sign-in" />
                 <PageButton pageName="Register" pagePath="/sign-up" />
-                <div className="ml-auto">
-                    <HealthButton />
-                </div>
+                <div className="m-auto"></div>
+                <UserStatus />
+                <HealthButton />
             </div>
-
 
             <div className="max-w-2xl min-h-20 mx-auto bg-slate-800">
                 <Outlet />
             </div>
 
-            <div className="max-w-2xl mx-auto bg-slate-800">
+            <div className="max-w-3xl mx-auto bg-slate-800">
                 this is the footer
             </div>
         </div>
