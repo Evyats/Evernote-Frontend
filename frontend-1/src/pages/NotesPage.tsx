@@ -47,6 +47,11 @@ export default function NotesPage() {
         }
       )
       console.log("userId:", userId)
+      if (!result.ok) {
+        console.log("Can't fetch notes, status:", result.status)
+        setErrorNotes("Can't fetch notes")
+        return
+      }
       const resultJson = await result.json()
       setNotes(resultJson)
     }
@@ -73,12 +78,28 @@ export default function NotesPage() {
           }
         }
       )
+      if (!result.ok) {
+        // Try to extract a more specific error message from the response, if available
+        let errorMessage = `Can't fetch note (status ${result.status})`
+        try {
+          const errorBody = await result.json()
+          if (errorBody && typeof errorBody.message === "string") {
+            errorMessage = errorBody.message
+          }
+        } catch {
+          // Ignore JSON parse errors and use the default message
+        }
+        setErrorNote(errorMessage)
+        throw new Error(errorMessage)
+      }
       const resultJson = await result.json()
       setNote(resultJson)
     }
     catch {
       console.log("Can't fetch note")
-      setErrorNote("Can't fetch note")
+      if (!errorNote) {
+        setErrorNote("Can't fetch note")
+      }
     }
     finally {
       setLoadingNote(false)
@@ -97,10 +118,13 @@ export default function NotesPage() {
 
 
   useEffect(() => {
+    if (!userId || !token) {
+      return
+    }
     fetchNotes()
     console.log("Fetching notes...")
     // console.log(notes)
-  }, [])
+  }, [userId, token])
 
 
 
@@ -109,7 +133,7 @@ export default function NotesPage() {
       Notes page
 
       <div className="flex flex-row border rounded-xl p-3 gap-2">
-        <div className=" flex-[1] flex flex-col gap-2 rounded p-2">
+        <div className="flex-[1] flex flex-col gap-2 rounded p-2">
           { loadingNotes && (
             <p>Loading notes...</p>
           )}

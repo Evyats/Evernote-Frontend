@@ -21,7 +21,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated: Boolean(token),
         setToken: setTokenState,
         setUserId: setUserId,
-        clearAuth: () => setTokenState(null)
+        clearAuth: () => {
+          setTokenState(null)
+          setUserId(null)
+        }
       }}
     >
       {children}

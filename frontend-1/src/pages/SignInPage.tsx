@@ -40,6 +40,7 @@ export default function SignInPage() {
       setSuccessMessage("Signed in")
     } catch (error) {
       setToken(null)
+      setUserId(null)
       setErrorMessage(error instanceof Error ? error.message : "Unknown error")
     } finally {
       setIsLoading(false)
