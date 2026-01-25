@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from './auth/AuthContext'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 
 
@@ -22,7 +23,7 @@ function HealthButton() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
     const fetchHealth = async () => {
-        const result = await fetch("http://localhost:8123/health")
+        const result = await fetch(`${API_BASE_URL}/health`)
         if (!result.ok) {
             throw new Error("Backend is not reachable")
         }
@@ -85,7 +86,7 @@ function UserStatus() {
     }, [isAuthenticated])
 
     async function fetchUserInfo() {
-        const baseUrl = "http://localhost:8123/auth/me"
+        const baseUrl = `${API_BASE_URL}/auth/me`
         setIsChecking(true)
         try {
             const result = await fetch(
@@ -130,7 +131,8 @@ export default function Layout() {
                 <PageButton pageName="Home" pagePath="/" />
                 <PageButton pageName="Login" pagePath="/sign-in" />
                 <PageButton pageName="Register" pagePath="/sign-up" />
-                <div className="m-auto"></div>
+                <PageButton pageName="Notes" pagePath="/notes" />
+                <div className="flex-grow"></div>
                 <UserStatus />
                 <HealthButton />
             </div>

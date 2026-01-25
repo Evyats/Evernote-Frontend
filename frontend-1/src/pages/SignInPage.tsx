@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useAuth } from "../auth/AuthContext"
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export default function SignInPage() {
 
@@ -9,10 +10,10 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const { setToken } = useAuth()
+  const { setToken, setUserId } = useAuth()
 
   async function fetchSignIn(email: string, password: string) {
-    const result = await fetch("http://localhost:8123/auth/login", {
+    const result = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -24,7 +25,7 @@ export default function SignInPage() {
       console.log(result, errorBody)
       throw new Error(`Sign in failed: ${errorBody || result.statusText}`)
     }
-    return result.json() as Promise<{ access_token: string; token_type: string }>
+    return result.json() as Promise<{ access_token: string; token_type: string, user_id: string }>
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -35,9 +36,11 @@ export default function SignInPage() {
     try {
       const data = await fetchSignIn(emailInput, passwordInput)
       setToken(data.access_token)
+      setUserId(data.user_id)
       setSuccessMessage("Signed in")
     } catch (error) {
       setToken(null)
+      setUserId(null)
       setErrorMessage(error instanceof Error ? error.message : "Unknown error")
     } finally {
       setIsLoading(false)
