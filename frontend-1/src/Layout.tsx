@@ -132,7 +132,7 @@ export default function Layout() {
                 <PageButton pageName="Login" pagePath="/sign-in" />
                 <PageButton pageName="Register" pagePath="/sign-up" />
                 <PageButton pageName="Notes" pagePath="/notes" />
-                <div className="m-auto"></div>
+                <div className="flex-grow"></div>
                 <UserStatus />
                 <HealthButton />
             </div>
