@@ -127,7 +127,7 @@ function UserStatus() {
 export default function Layout() {
     return (
         <div className="min-h-screen space-y-5 bg-slate-950 text-slate-50">
-            <div className="max-w-3xl mx-auto bg-slate-800 p-3 flex flex-row gap-3 items-center">
+            <div className="max-w-3xl mx-auto bg-slate-800 p-3 flex flex-row gap-3 items-center rounded-b-3xl">
                 <PageButton pageName="Home" pagePath="/" />
                 <PageButton pageName="Login" pagePath="/sign-in" />
                 <PageButton pageName="Register" pagePath="/sign-up" />
@@ -137,11 +137,11 @@ export default function Layout() {
                 <HealthButton />
             </div>
 
-            <div className="max-w-2xl min-h-20 mx-auto bg-slate-800">
+            <div className="max-w-2xl min-h-20 mx-auto bg-slate-800 rounded-xl">
                 <Outlet />
             </div>
 
-            <div className="max-w-3xl mx-auto bg-slate-800">
+            <div className="max-w-3xl mx-auto bg-slate-800 rounded-xl p-3">
                 this is the footer
             </div>
         </div>
