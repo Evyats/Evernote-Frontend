@@ -22,7 +22,6 @@ export default function NotesPage() {
 
   const [notes, setNotes] = useState<null | NoteListEntry[]>(null)
   const [loadingNotes, setLoadingNotes] = useState(false)
-  const [errorNotes, setErrorNotes] = useState("")
 
   const [note, setNote] = useState<null | Note>(null)
   const [loadingNote, setLoadingNote] = useState(false)
@@ -49,7 +48,6 @@ export default function NotesPage() {
   async function fetchNotes() {
     try {
       setLoadingNotes(true)
-      setErrorNotes("")
       setNotes(null)
       const result = await fetch(
         `${API_BASE_URL}/api/users/${userId}/notes`,
@@ -62,7 +60,6 @@ export default function NotesPage() {
       console.log("userId:", userId)
       if (!result.ok) {
         console.log("Can't fetch notes, status:", result.status)
-        setErrorNotes("Can't fetch notes")
         return
       }
       const resultJson = await result.json()
@@ -70,7 +67,6 @@ export default function NotesPage() {
     }
     catch {
       console.log("Can't fetch notes")
-      setErrorNotes("Can't fetch notes")
     }
     finally {
       setLoadingNotes(false)
